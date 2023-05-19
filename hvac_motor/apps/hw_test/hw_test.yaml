@@ -1,0 +1,4 @@
+sample:
+  name: Hardware Test
+  modules:
+   - fatfs

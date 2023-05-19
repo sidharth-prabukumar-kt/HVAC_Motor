@@ -1,0 +1,3 @@
+menu "HVAC Motor Controller"
+rsource "Kconfig.hvac_motor"
+endmenu

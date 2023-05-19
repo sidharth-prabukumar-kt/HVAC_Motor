@@ -1,0 +1,181 @@
+/*
+ * Copyright (c) 2017 I-SENSE group of ICCS
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <st/f3/stm32f302X8.dtsi>
+#include <st/f3/stm32f302c(6-8)tx-pinctrl.dtsi>
+
+/ {
+	model = "HVAC Motor Controller board";
+	compatible = "sid,hvac_motor";
+
+	chosen {
+		zephyr,console = &usart1;
+		zephyr,shell-uart = &usart1;
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		white_led_1: wled0 {
+			gpios = <&gpioa 4 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	pwm_ctrl: pwm_ctrl {
+		compatible = "gpio-leds";
+		pwm_1_en: pwm1_en {
+			gpios = <&gpioa 6 GPIO_ACTIVE_HIGH>;
+		};
+		pwm_2_en: pwm2_en {
+			gpios = <&gpiob 4 GPIO_ACTIVE_HIGH>;
+		};
+		pwm_3_en: pwm3_en {
+			gpios = <&gpioa 3 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	drv8313_ctrl: drv8313_ctrl {
+		compatible = "gpio-leds";
+		drv_n_sleep: drv_n_sleep {
+			gpios = <&gpiob 10 GPIO_ACTIVE_LOW>;
+		};
+		drv_n_reset: drv_n_reset {
+			gpios = <&gpiob 11 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	inputs {
+		compatible = "gpio-keys";
+		hall_1: hall1 {
+			gpios = <&gpioa 8 GPIO_ACTIVE_LOW>;
+		};
+		hall_2: hall2 {
+			gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
+		};
+		hall_3: hall3 {
+			gpios = <&gpiob 5 GPIO_ACTIVE_LOW>;
+		};
+
+	};
+
+	aliases {
+		led0 = &white_led_1;
+		watchdog0 = &iwdg;
+		die-temp0 = &die_temp;
+	};
+};
+
+&clk_lsi {
+	status = "okay";
+};
+
+&clk_hse {
+	clock-frequency = <DT_FREQ_M(16)>; /* 16 MHz crystal */
+	status = "okay";
+};
+
+&pll {
+	prediv = <1>;
+	mul = <9>;
+	clocks = <&clk_hse>;
+	status = "okay";
+};
+
+&rcc {
+	clocks = <&pll>;
+	clock-frequency = <DT_FREQ_M(72)>;
+	ahb-prescaler = <1>;
+	apb1-prescaler = <2>;
+	apb2-prescaler = <1>;
+};
+
+&usart1 {
+	pinctrl-0 = <&usart1_tx_pb6 &usart1_rx_pa10>;
+	pinctrl-names = "default";
+	current-speed = <115200>;
+	status = "okay";
+};
+
+&i2c1 {
+	pinctrl-0 = <&i2c1_scl_pb8 &i2c1_sda_pb7>;
+	pinctrl-names = "default";
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_FAST>;
+};
+
+&spi2 {
+	pinctrl-0 = <&spi2_nss_pb12 &spi2_sck_pb13
+		     &spi2_miso_pb14 &spi2_mosi_pb15>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+zephyr_udc0: &usb {
+	pinctrl-0 = <&usb_dm_pa11 &usb_dp_pa12>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&rtc {
+	clocks = <&rcc STM32_CLOCK_BUS_APB1 0x10000000>,
+		 <&rcc STM32_SRC_LSI RTC_SEL(2)>;
+	status = "okay";
+
+	backup_regs {
+		status = "okay";
+	};
+};
+
+&flash0 {
+
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* Set 6Kb of storage at the end of the 256Kb of flash */
+		storage_partition: partition@3e800 {
+			label = "storage";
+			reg = <0x0003e800 DT_SIZE_K(6)>;
+		};
+	};
+};
+
+&iwdg {
+	status = "okay";
+};
+
+&timers2 {
+	st,prescaler = <10000>;
+	status = "okay";
+	pwm1: pwm1 {
+		status = "okay";
+		pinctrl-0 = <&tim2_ch1_pa5>;
+		pinctrl-names = "default";
+	};
+	pwm2: pwm2 {
+		status = "okay";
+		pinctrl-0 = <&tim2_ch2_pa1>;
+		pinctrl-names = "default";
+	};
+	pwm3: pwm3 {
+		status = "okay";
+		pinctrl-0 = <&tim2_ch3_pa9>;
+		pinctrl-names = "default";
+	};
+};
+
+&adc1 {
+	pinctrl-0 = <&adc1_in1_pa0 &adc1_in3_pa2>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&die_temp {
+	status = "okay";
+};

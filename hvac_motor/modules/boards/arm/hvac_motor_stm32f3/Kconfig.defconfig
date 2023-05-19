@@ -1,0 +1,11 @@
+# HVAC Motor Controller board configuration
+
+# Copyright (c) 2017 I-SENSE group of ICCS
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_HVAC_MOTOR_STM32F3
+
+config BOARD
+	default "hvac_motor_stm32f3"
+
+endif # BOARD_HVAC_MOTOR_STM32F3

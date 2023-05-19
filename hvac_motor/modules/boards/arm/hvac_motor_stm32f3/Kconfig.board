@@ -1,0 +1,8 @@
+# HVAC Motor Controller board configuration
+
+# Copyright (c) 2017 I-SENSE group of ICCS
+# SPDX-License-Identifier: Apache-2.0
+
+config BOARD_HVAC_MOTOR_STM32F3
+	bool "HVAC Motor Controller Board"
+	depends on SOC_STM32F302X8

@@ -1,0 +1,3 @@
+mainmenu "HVAC Motor App"
+
+source "Kconfig.zephyr"
