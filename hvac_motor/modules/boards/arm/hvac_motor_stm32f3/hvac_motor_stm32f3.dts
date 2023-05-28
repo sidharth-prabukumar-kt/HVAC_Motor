@@ -80,7 +80,7 @@
 };
 
 &pll {
-	prediv = <1>;
+	prediv = <2>;
 	mul = <9>;
 	clocks = <&clk_hse>;
 	status = "okay";
@@ -91,7 +91,7 @@
 	clock-frequency = <DT_FREQ_M(72)>;
 	ahb-prescaler = <1>;
 	apb1-prescaler = <2>;
-	apb2-prescaler = <1>;
+	apb2-prescaler = <2>;
 };
 
 &usart1 {
@@ -153,20 +153,10 @@ zephyr_udc0: &usb {
 &timers2 {
 	st,prescaler = <10000>;
 	status = "okay";
-	pwm1: pwm1 {
-		status = "okay";
-		pinctrl-0 = <&tim2_ch1_pa5>;
+	pwm1: pwm {
+		pinctrl-0 = <&tim2_ch1_pa5 &tim2_ch2_pa1 &tim2_ch3_pa9>;
 		pinctrl-names = "default";
-	};
-	pwm2: pwm2 {
 		status = "okay";
-		pinctrl-0 = <&tim2_ch2_pa1>;
-		pinctrl-names = "default";
-	};
-	pwm3: pwm3 {
-		status = "okay";
-		pinctrl-0 = <&tim2_ch3_pa9>;
-		pinctrl-names = "default";
 	};
 };
 
